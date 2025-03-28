@@ -1,1 +1,4 @@
 /.env
+__pycache__/functions.cpython-313.pyc
+.gitignore
+sanbox.ipynb
