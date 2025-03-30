@@ -1,4 +1,5 @@
 import yfinance as yf
+import requests
 
 def get_data(ticker, period):
 
@@ -27,3 +28,9 @@ def generate_columns(stock):
 
     return stock
 
+def get_overview_data(ticker, API_KEY):
+    url = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + ticker + '&apikey=' + API_KEY
+    r = requests.get(url)
+    data = r.json()
+
+    return data
