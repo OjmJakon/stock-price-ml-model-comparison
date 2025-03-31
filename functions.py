@@ -1,19 +1,29 @@
 import yfinance as yf
 import requests
 
-def get_data(ticker, period):
+def get_data(function: str, ticker, period: str, api_key: str):
 
-    end_data = dict()
+    end_data_yf = dict()
+    end_data_alpha = dict()
     if isinstance(ticker, list):
         for i in ticker:
-            ticker = yf.Ticker(i)
-            data = ticker.history(period=period)
-            end_data[i] = data
+            yf_ticker = yf.Ticker(i)
+            data_yf = yf_ticker.history(period=period)
+            end_data_yf[i] = data_yf
+            if function and api_key:
+                url = f'https://www.alphavantage.co/query?function={function}&symbol={i}&apikey={api_key}'
+                r = requests.get(url)
+                end_data_alpha[i] = r.json()
     else:
-        data = ticker.history(period=period)
-        end_data[ticker] = data
+        yf_ticker = yf.Ticker(ticker)
+        data_yf = yf_ticker.history(period=period)
+        end_data_yf[ticker] = data_yf
+        if function and api_key:
+            url = f'https://www.alphavantage.co/query?function={function}&symbol={ticker}&apikey={api_key}'
+            r = requests.get(url)
+            end_data_alpha[ticker] = r.json()
 
-    return end_data
+    return [end_data_yf, end_data_alpha]
 
 
 def generate_columns(stock):
